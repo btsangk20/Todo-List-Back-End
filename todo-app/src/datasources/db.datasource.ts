@@ -4,8 +4,9 @@ import {juggler} from '@loopback/repository';
 const config = {
   name: 'db',
   connector: 'mongodb',
-  url: 'mongodb+srv://buitansang:M5JJExZe4m7e9z@cluster0.59qfxvz.mongodb.net/test',
-  useNewUrlParser: true
+  url: 'mongodb+srv://todolist:ccn0YPqnEsqay6YY@todolist.7kfy8ug.mongodb.net/?retryWrites=true&w=majority',
+  useNewUrlParser: true,
+  connectionTimeout: 171121,
 };
 
 // Observe application's life cycle to disconnect the datasource when
