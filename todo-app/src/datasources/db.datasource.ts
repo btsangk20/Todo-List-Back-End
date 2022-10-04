@@ -3,9 +3,9 @@ import {juggler} from '@loopback/repository';
 
 const config = {
   name: 'db',
-  connector: 'memory',
-  localStorage: '',
-  file: './data/db.json'
+  connector: 'mongodb',
+  url: 'mongodb+srv://buitansang:M5JJExZe4m7e9z@cluster0.59qfxvz.mongodb.net/test',
+  useNewUrlParser: true
 };
 
 // Observe application's life cycle to disconnect the datasource when
