@@ -28,12 +28,12 @@ entity Task {
 + name : string
 + description : string
 + status: TaskStatus
++ linkedTo: Task
 + createdBy: User
 + isDeleted: boolean
 }
 
 Task--TaskStatus
-Task ||--|| Task
 
 enum TaskStatus {
     Doing,

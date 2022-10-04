@@ -39,6 +39,12 @@ export class Task extends Entity {
   })
   isDeleted?: boolean;
 
+  @property({
+    type: 'object',
+    default: {},
+  })
+  linkedTo?: object;
+
   @belongsTo(() => Project)
   projectId: string;
 
