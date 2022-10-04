@@ -19,7 +19,8 @@ import {
 } from '@loopback/rest';
 import {Project} from '../models';
 import {ProjectRepository} from '../repositories';
-
+import {authenticate} from '@loopback/authentication';
+@authenticate('jwt')
 export class ProjectController {
   constructor(
     @repository(ProjectRepository)

@@ -9,6 +9,9 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {AuthenticationComponent} from '@loopback/authentication';
+import {MyJWTAuthenticationComponent} from './services/jwt-authentication';
+import {SECURITY_SCHEME_SPEC} from '@loopback/authentication-jwt';
 
 export {ApplicationConfig};
 
@@ -29,6 +32,8 @@ export class TodoAppApplication extends BootMixin(
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
+    this.component(AuthenticationComponent);
+    this.component(MyJWTAuthenticationComponent);
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
@@ -40,5 +45,20 @@ export class TodoAppApplication extends BootMixin(
         nested: true,
       },
     };
+    this.addSecuritySpec();
+  }
+
+  addSecuritySpec(): void {
+    this.api({
+      openapi: '3.0.0',
+      info: {
+        title: 'TODO API',
+        version: '1.0.0',
+      },
+      paths: {},
+      components: {securitySchemes: SECURITY_SCHEME_SPEC},
+      security: [{jwt: []}],
+      servers: [{url: '/'}],
+    });
   }
 }
