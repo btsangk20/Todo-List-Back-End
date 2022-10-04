@@ -1,0 +1,24 @@
+{
+  "ids": {
+    "Task": 4,
+    "User": 4,
+    "Project": 4
+  },
+  "models": {
+    "Task": {
+      "1": "{\"projectId\":\"1\",\"userId\":\"1\",\"name\":\"Task 1\",\"status\":\"Doing\",\"createdBy\":{},\"isDeleted\":false,\"id\":\"1\"}",
+      "2": "{\"projectId\":\"1\",\"userId\":\"1\",\"name\":\"Task 1\",\"status\":\"Doing\",\"createdBy\":{},\"isDeleted\":false,\"id\":\"2\"}",
+      "3": "{\"projectId\":\"1\",\"userId\":\"1\",\"name\":\"Task 1\",\"status\":\"Doing\",\"createdBy\":{},\"isDeleted\":false,\"id\":\"3\"}"
+    },
+    "User": {
+      "1": "{\"userName\":\"buitansang\",\"password\":\"buitansang\",\"isAdmin\":false,\"id\":\"1\"}",
+      "2": "{\"userName\":\"buitansang1\",\"password\":\"buitansang\",\"isAdmin\":false,\"id\":\"2\"}",
+      "3": "{\"userName\":\"buitansang2\",\"password\":\"buitansang\",\"isAdmin\":false,\"id\":\"3\"}"
+    },
+    "Project": {
+      "1": "{\"name\":\"Project 1\",\"createdBy\":{},\"isDeleted\":false,\"id\":\"1\"}",
+      "2": "{\"name\":\"Project 2\",\"createdBy\":{},\"isDeleted\":false,\"id\":\"2\"}",
+      "3": "{\"name\":\"Project 3\",\"createdBy\":{},\"isDeleted\":false,\"id\":\"3\"}"
+    }
+  }
+}

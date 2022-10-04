@@ -1,0 +1,56 @@
+@startuml Todo-List
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity Project {
++ id : string <<generated>>
+--
++ name : string
++ description : string
++ createdBy: User
++ isDeleted: boolean
+}
+
+entity User { 
++ id : string <<generated>>
+--
++ userName : string
++ password : string
++ isAdmin : boolean
+}
+
+entity Task {
++ id : string <<generated>>
++ projectId: string
++ userId: string
+--
++ name : string
++ description : string
++ status: TaskStatus
++ createdBy: User
++ isDeleted: boolean
+}
+
+Task--TaskStatus
+Task ||--|| Task
+
+enum TaskStatus {
+    Doing,
+    Done
+}
+
+entity UserProject {
++ id : string <<generated>>
+--
++ projectId: string
++ userId: string
+}
+
+UserProject }|--|| User
+UserProject }|--|| Project
+
+Task }|--|| Project
+Task }|--|| User
+
+@enduml
