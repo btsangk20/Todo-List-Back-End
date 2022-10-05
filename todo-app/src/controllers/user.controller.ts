@@ -13,19 +13,31 @@ import {
   getModelSchemaRef,
   patch,
   put,
+  HttpErrors,
   del,
   requestBody,
   response,
 } from '@loopback/rest';
+
+import {
+  PasswordHasherBindings
+} from '../services/jwt-authentication';
+
 import {User} from '../models';
 import {UserRepository} from '../repositories';
-import {authenticate} from '@loopback/authentication';
-@authenticate('jwt')
+import {inject} from '@loopback/core';
+import {pick} from 'lodash';
+import {BcryptHasher} from '../services/hash-password';
+import {validateCredentials} from '../services/validator';
 
 export class UserController {
   constructor(
     @repository(UserRepository)
     public userRepository : UserRepository,
+
+    @inject(PasswordHasherBindings.PASSWORD_HASHER)
+    public hasher: BcryptHasher,
+
   ) {}
 
   @post('/users')
@@ -44,9 +56,24 @@ export class UserController {
         },
       },
     })
-    user: Omit<User, 'id'>,
-  ): Promise<User> {
-    return this.userRepository.create(user);
+    userData: Omit<User, 'id'>,
+  ) {
+    validateCredentials(pick(userData, ['userName', 'password']));
+
+    const existedUser = await this.userRepository.findOne({
+      where: {userName: userData.userName},
+    });
+    if (existedUser) {
+      throw new HttpErrors.UnprocessableEntity('username existed');
+    }
+
+    const hashedPassword = await this.hasher.hashPassword(userData.password);
+    const newUser = await this.userRepository.create({
+      userName: userData.userName,
+      password: hashedPassword,
+      role: userData.role,
+    });
+    return newUser;
   }
 
   @get('/users/count')
