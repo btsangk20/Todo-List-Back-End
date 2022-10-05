@@ -23,10 +23,10 @@ export class Project extends Entity {
   description?: string;
 
   @property({
-    type: 'object',
+    type: 'string',
     required: true,
   })
-  createdBy: object;
+  createdBy: string;
 
   @property({
     type: 'boolean',

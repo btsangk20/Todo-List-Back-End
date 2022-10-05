@@ -76,7 +76,6 @@ export class AuthController {
     if (existedUser) {
       throw new HttpErrors.UnprocessableEntity('username existed');
     }
-
     const hashedPassword = await this.hasher.hashPassword(userData.password);
     const newUser = await this.userRepository.create({
       userName: userData.userName,

@@ -8,7 +8,7 @@ entity Project {
 --
 + name : string
 + description : string
-+ createdBy: User
++ createdBy: userId
 + isDeleted: boolean
 }
 
@@ -37,7 +37,7 @@ entity Task {
 + status: TaskStatus
 + linkedTo: Task
 + isCreatedByAdmin: boolean
-+ createdBy: User
++ createdBy: userId
 + isDeleted: boolean
 }
 

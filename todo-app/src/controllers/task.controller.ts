@@ -57,11 +57,8 @@ export class TaskController {
     })
     task: Omit<Task, 'id' | 'isCreatedByAdmin'>,
   ): Promise<Task> {
-    console.log(currentUserProfile);
     const role: RoleEnum = currentUserProfile?.role ?? RoleEnum.USER;
-    console.log('role', role);
     const userId: string = currentUserProfile?.id;
-    console.log('userId', userId);
     set(task, 'isCreatedByAdmin', role === RoleEnum.ADMIN)
     set(task, 'createdBy', userId);
     return this.taskRepository.create(task);
