@@ -17,8 +17,15 @@ entity User {
 --
 + userName : string
 + password : string
-+ isAdmin : boolean
++ role : Role
 }
+
+enum Role {
++ ADMIN
++ USER
+}
+
+User -- Role
 
 entity Task {
 + id : string <<generated>>
@@ -29,6 +36,7 @@ entity Task {
 + description : string
 + status: TaskStatus
 + linkedTo: Task
++ isCreatedByAdmin: boolean
 + createdBy: User
 + isDeleted: boolean
 }
@@ -36,8 +44,8 @@ entity Task {
 Task--TaskStatus
 
 enum TaskStatus {
-    Doing,
-    Done
++Doing
++Done
 }
 
 entity UserProject {

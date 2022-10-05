@@ -1,4 +1,5 @@
 import { UserProfile } from '@loopback/security';
+import {RoleEnum} from '../../enums/role-enum';
 
 export type Credentials = {
   userName: string;
@@ -8,4 +9,5 @@ export type Credentials = {
 export interface MyUserProfile extends UserProfile {
   id: string;
   username: string;
+  role?: RoleEnum;
 }

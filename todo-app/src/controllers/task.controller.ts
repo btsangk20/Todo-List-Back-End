@@ -1,39 +1,50 @@
+import {authenticate} from '@loopback/authentication';
+import {OPERATION_SECURITY_SPEC} from '@loopback/authentication-jwt';
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  HttpErrors,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
+import {SecurityBindings, securityId} from '@loopback/security';
+import set from 'lodash/set';
 import {Task} from '../models';
 import {TaskRepository} from '../repositories';
-import {authenticate} from '@loopback/authentication';
-@authenticate('jwt')
+import {MyUserProfile} from '../services/jwt-authentication/type';
+import {RoleEnum} from './../enums/role-enum';
+import {TaskWithRelations} from './../models/task.model';
 
+@authenticate('jwt')
 export class TaskController {
   constructor(
     @repository(TaskRepository)
-    public taskRepository : TaskRepository,
-  ) {}
+    public taskRepository: TaskRepository,
+  ) { }
 
   @post('/tasks')
   @response(200, {
+    security: OPERATION_SECURITY_SPEC,
     description: 'Task model instance',
     content: {'application/json': {schema: getModelSchemaRef(Task)}},
   })
   async create(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: MyUserProfile,
     @requestBody({
       content: {
         'application/json': {
@@ -44,8 +55,15 @@ export class TaskController {
         },
       },
     })
-    task: Omit<Task, 'id'>,
+    task: Omit<Task, 'id' | 'isCreatedByAdmin'>,
   ): Promise<Task> {
+    console.log(currentUserProfile);
+    const role: RoleEnum = currentUserProfile?.role ?? RoleEnum.USER;
+    console.log('role', role);
+    const userId: string = currentUserProfile?.id;
+    console.log('userId', userId);
+    set(task, 'isCreatedByAdmin', role === RoleEnum.ADMIN)
+    set(task, 'createdBy', userId);
     return this.taskRepository.create(task);
   }
 
@@ -54,14 +72,13 @@ export class TaskController {
     description: 'Task model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Task) where?: Where<Task>,
-  ): Promise<Count> {
+  async count(@param.where(Task) where?: Where<Task>): Promise<Count> {
     return this.taskRepository.count(where);
   }
 
   @get('/tasks')
   @response(200, {
+    security: OPERATION_SECURITY_SPEC,
     description: 'Array of Task model instances',
     content: {
       'application/json': {
@@ -73,9 +90,19 @@ export class TaskController {
     },
   })
   async find(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: MyUserProfile,
     @param.filter(Task) filter?: Filter<Task>,
   ): Promise<Task[]> {
-    return this.taskRepository.find(filter);
+    const role: RoleEnum = currentUserProfile?.role ?? RoleEnum.USER
+    const userId: string = currentUserProfile[securityId]
+    const tasks: TaskWithRelations[] = await this.taskRepository.find(filter)
+    return role === RoleEnum.ADMIN
+      ? tasks
+      : tasks.filter(
+          task =>
+            !task?.isCreatedByAdmin || String(task?.userId) === userId,
+        );
   }
 
   @patch('/tasks')
@@ -99,6 +126,7 @@ export class TaskController {
 
   @get('/tasks/{id}')
   @response(200, {
+    security: OPERATION_SECURITY_SPEC,
     description: 'Task model instance',
     content: {
       'application/json': {
@@ -107,10 +135,21 @@ export class TaskController {
     },
   })
   async findById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: MyUserProfile,
     @param.path.string('id') id: string,
-    @param.filter(Task, {exclude: 'where'}) filter?: FilterExcludingWhere<Task>
+    @param.filter(Task, {exclude: 'where'}) filter?: FilterExcludingWhere<Task>,
   ): Promise<Task> {
-    return this.taskRepository.findById(id, filter);
+    const role: RoleEnum = currentUserProfile.role ?? RoleEnum.USER;
+    const userId: string = currentUserProfile[securityId];
+    const task: TaskWithRelations = await this.taskRepository.findById(
+      id,
+      filter,
+    );
+    if (role !== RoleEnum.ADMIN && task?.isCreatedByAdmin && task?.userId !== userId) {
+      throw new HttpErrors.Unauthorized('This task can not be seen by user');
+    }
+    return task;
   }
 
   @patch('/tasks/{id}')

@@ -47,6 +47,7 @@ export class MyUserService implements UserService<User, Credentials> {
       [securityId]: user.id!,
       id: user.id!,
       username: user.userName,
+      role: user.role
     };
   }
 }

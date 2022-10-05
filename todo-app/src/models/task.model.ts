@@ -17,6 +17,11 @@ export class Task extends Entity {
   name: string;
 
   @property({
+    type: 'boolean',
+  })
+  isCreatedByAdmin?: boolean;
+
+  @property({
     type: 'string',
   })
   description?: string;
@@ -28,10 +33,10 @@ export class Task extends Entity {
   status?: string;
 
   @property({
-    type: 'object',
+    type: 'string',
     required: true,
   })
-  createdBy: object;
+  createdBy: string;
 
   @property({
     type: 'boolean',

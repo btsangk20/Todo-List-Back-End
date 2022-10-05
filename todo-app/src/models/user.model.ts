@@ -1,6 +1,7 @@
 import {Entity, model, property, hasMany} from '@loopback/repository';
 import {Task} from './task.model';
 import {UserProject} from './user-project.model';
+import {RoleEnum} from './../enums/role-enum';
 
 @model()
 export class User extends Entity {
@@ -24,10 +25,12 @@ export class User extends Entity {
   password: string;
 
   @property({
-    type: 'boolean',
-    default: false,
+    type: 'string',
+    jsonSchema: {
+      enum: Object.values(RoleEnum),
+    },
   })
-  isAdmin?: boolean;
+  role?: RoleEnum;
 
   @hasMany(() => Task)
   tasks: Task[];

@@ -81,7 +81,7 @@ export class AuthController {
     const newUser = await this.userRepository.create({
       userName: userData.userName,
       password: hashedPassword,
-      isAdmin: userData.isAdmin,
+      role: userData.role,
     });
     return newUser;
   }

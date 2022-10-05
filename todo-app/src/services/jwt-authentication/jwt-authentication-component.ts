@@ -30,7 +30,7 @@ export class MyJWTAuthenticationComponent implements Component {
 
     Binding.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService),
     Binding.bind(TokenServiceBindings.TOKEN_SECRET).to(
-      process.env.JWT_SECRET_VALUE ?? 'vuhoangphuc',
+      process.env.JWT_SECRET_VALUE ?? 'buitansang',
     ),
     Binding.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(
       process.env.JWT_EXPIRES_IN_VALUE ?? '24h',
