@@ -35,7 +35,6 @@ entity Task {
 + name : string
 + description : string
 + status: TaskStatus
-+ linkedTo: Task
 + isCreatedByAdmin: boolean
 + createdBy: userId
 + isDeleted: boolean

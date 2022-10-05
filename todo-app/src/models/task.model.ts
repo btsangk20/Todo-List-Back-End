@@ -43,18 +43,15 @@ export class Task extends Entity {
     default: false,
   })
   isDeleted?: boolean;
-
-  @property({
-    type: 'string',
-    default: '',
-  })
-  linkedTo?: string;
-
-  @belongsTo(() => Project)
+  
+  @belongsTo(() => Project, {name: 'ofProject'})
   projectId: string;
 
-  @belongsTo(() => User)
+  @belongsTo(() => User, {name: 'assignedTo'})
   userId: string;
+
+  @belongsTo(() => Task, {name: 'linkedToo'})
+  linkedTo: string;
 
   constructor(data?: Partial<Task>) {
     super(data);

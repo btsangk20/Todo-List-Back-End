@@ -15,13 +15,21 @@ export class TaskRepository extends DefaultCrudRepository<
 
   public readonly user: BelongsToAccessor<User, typeof Task.prototype.id>;
 
+  public readonly linkedToTask: BelongsToAccessor<Task, typeof Task.prototype.id>;
+
   constructor(
-    @inject('datasources.db') dataSource: DbDataSource, @repository.getter('ProjectRepository') protected projectRepositoryGetter: Getter<ProjectRepository>, @repository.getter('UserRepository') protected userRepositoryGetter: Getter<UserRepository>,
+    @inject('datasources.db') dataSource: DbDataSource, @repository.getter('ProjectRepository') protected projectRepositoryGetter: Getter<ProjectRepository>, @repository.getter('UserRepository') protected userRepositoryGetter: Getter<UserRepository>, @repository.getter('TaskRepository') protected taskRepositoryGetter: Getter<TaskRepository>,
   ) {
     super(Task, dataSource);
-    this.user = this.createBelongsToAccessorFor('user', userRepositoryGetter,);
-    this.registerInclusionResolver('user', this.user.inclusionResolver);
-    this.project = this.createBelongsToAccessorFor('project', projectRepositoryGetter,);
-    this.registerInclusionResolver('project', this.project.inclusionResolver);
+    this.linkedToTask = this.createBelongsToAccessorFor(
+      'linkedToo',
+      Getter.fromValue(this),
+    ); // for recursive relationship
+    this.registerInclusionResolver('linkedToo', this.linkedToTask.inclusionResolver);
+
+    this.user = this.createBelongsToAccessorFor('assignedTo', userRepositoryGetter,);
+    this.registerInclusionResolver('assignedTo', this.user.inclusionResolver);
+    this.project = this.createBelongsToAccessorFor('ofProject', projectRepositoryGetter,);
+    this.registerInclusionResolver('ofProject', this.project.inclusionResolver);
   }
 }
