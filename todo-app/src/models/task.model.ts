@@ -34,9 +34,25 @@ export class Task extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
   createdBy: string;
+
+  @property({
+    type: 'date',
+    default: () => new Date(),
+  })
+  createdAt: string;
+
+  @property({
+    type: 'string',
+  })
+  updatedBy: string;
+
+  @property({
+    type: 'date',
+    default: () => new Date(),
+  })
+  updatedAt: string;
 
   @property({
     type: 'boolean',

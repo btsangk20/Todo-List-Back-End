@@ -61,6 +61,7 @@ export class TaskController {
     const userId: string = currentUserProfile?.id;
     set(task, 'isCreatedByAdmin', role === RoleEnum.ADMIN)
     set(task, 'createdBy', userId);
+    set(task, 'updatedBy', userId);
     return this.taskRepository.create(task);
   }
 
@@ -108,6 +109,8 @@ export class TaskController {
     content: {'application/json': {schema: CountSchema}},
   })
   async updateAll(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: MyUserProfile,
     @requestBody({
       content: {
         'application/json': {
@@ -118,6 +121,9 @@ export class TaskController {
     task: Task,
     @param.where(Task) where?: Where<Task>,
   ): Promise<Count> {
+    const userId: string = currentUserProfile?.id;
+    set(task, 'updatedBy', userId);
+    set(task, 'updatedAt', new Date());
     return this.taskRepository.updateAll(task, where);
   }
 
@@ -154,6 +160,8 @@ export class TaskController {
     description: 'Task PATCH success',
   })
   async updateById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: MyUserProfile,
     @param.path.string('id') id: string,
     @requestBody({
       content: {
@@ -164,6 +172,9 @@ export class TaskController {
     })
     task: Task,
   ): Promise<void> {
+    const userId: string = currentUserProfile?.id;
+    set(task, 'updatedBy', userId);
+    set(task, 'updatedAt', new Date());
     await this.taskRepository.updateById(id, task);
   }
 
@@ -172,9 +183,14 @@ export class TaskController {
     description: 'Task PUT success',
   })
   async replaceById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: MyUserProfile,
     @param.path.string('id') id: string,
     @requestBody() task: Task,
   ): Promise<void> {
+    const userId: string = currentUserProfile?.id;
+    set(task, 'updatedBy', userId);
+    set(task, 'updatedAt', new Date());
     await this.taskRepository.replaceById(id, task);
   }
 

@@ -9,6 +9,9 @@ entity Project {
 + name : string
 + description : string
 + createdBy: userId
++ updatedBy: userId
++ createdAt: date
++ updatedAt: date
 + isDeleted: boolean
 }
 
@@ -37,6 +40,10 @@ entity Task {
 + status: TaskStatus
 + isCreatedByAdmin: boolean
 + createdBy: userId
++ updatedBy: userId
++ createdAt: date
++ updatedAt: date
++ linkedTo: taskId
 + isDeleted: boolean
 }
 
@@ -56,6 +63,8 @@ entity UserProject {
 
 UserProject }|--|| User
 UserProject }|--|| Project
+
+Task ||--||Task
 
 Task }|--|| Project
 Task }|--|| User
