@@ -196,7 +196,7 @@ export class TaskController {
 
   @del('/tasks/{id}')
   @response(204, {
-    description: 'Task DELETE success',
+    description: 'Task DELETE successs',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.taskRepository.deleteById(id);
